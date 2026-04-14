@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Méli Empire SPA — Maquette UI / Design Handoff</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1e2024;
+      font-family: 'Inter', sans-serif;
+      color: #1a1a2e;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    /* === FIGMA COVER PAGE === */
+    .cover-page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #0f1629 0%, #1a2744 50%, #0f1629 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+    .cover-page::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #c8a76040 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .cover-page::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #c8a76020 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .cover-content { position: relative; z-index: 1; text-align: center; padding: 40px; }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(200, 167, 96, 0.15);
+      border: 1px solid rgba(200, 167, 96, 0.4);
+      color: #c8a760;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+    }
+    .cover-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .cover-logo span { color: #c8a760; font-style: italic; }
+    .cover-subtitle { color: rgba(255,255,255,0.5); font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 60px; }
+    .cover-divider { width: 60px; height: 2px; background: #c8a760; margin: 0 auto 60px; opacity: 0.5; }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .cover-meta-item { text-align: center; }
+    .cover-meta-label { color: rgba(255,255,255,0.35); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; }
+    .cover-meta-value { color: white; font-size: 12px; font-weight: 600; }
+    .cover-footer {
+      position: absolute;
+      bottom: 40px;
+      left: 0; right: 0;
+      text-align: center;
+      color: rgba(255,255,255,0.2);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+    }
+
+    /* === FIGMA CANVAS WRAPPER === */
+    .figma-canvas {
+      background: #1e2024;
+      padding: 60px 40px;
+    }
+
+    /* === PAGE === */
+    .figma-page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 60px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+      page-break-after: always;
+    }
+    /* For print */
+    @media print {
+      body { background: white; }
+      .figma-canvas { background: white; padding: 0; }
+      .cover-page, .figma-page { 
+        box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+        width: 100%;
+      }
+    }
+
+    /* === SECTION HEADER (Figma annotation style) === */
+    .section-header {
+      background: #2a2d35;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-header h2 {
+      color: #a0aec0;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .section-badge {
+      background: rgba(200, 167, 96, 0.15);
+      border: 1px solid rgba(200, 167, 96, 0.3);
+      color: #c8a760;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* === SCREEN FRAME === */
+    .screen-frame {
+      background: white;
+      margin: 30px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.12);
+      border: 1px solid #e2e8f0;
+    }
+    .screen-image {
+      width: 100%;
+      display: block;
+    }
+
+    /* === ANNOTATION BLOCK === */
+    .annotations-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 16px 30px 30px;
+    }
+    .annotation {
+      background: white;
+      border-radius: 8px;
+      padding: 14px 16px;
+      border-left: 3px solid #c8a760;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .annotation-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px; height: 20px;
+      background: #1a2744;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 50%;
+      margin-bottom: 8px;
+    }
+    .annotation h4 { font-size: 11px; font-weight: 700; color: #1a2744; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .annotation p { font-size: 10px; color: #718096; line-height: 1.5; }
+
+    /* === DESIGN TOKENS PAGE === */
+    .tokens-page { padding: 30px; }
+    .tokens-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .token-group { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .token-group h3 { font-size: 10px; font-weight: 700; color: #718096; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 14px; }
+    .color-swatch {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .swatch { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); flex-shrink: 0; }
+    .swatch-info h5 { font-size: 11px; font-weight: 600; color: #1a202c; }
+    .swatch-info p { font-size: 10px; color: #718096; }
+    .font-sample { margin-bottom: 14px; }
+    .font-sample .label { font-size: 9px; color: #a0aec0; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+    .font-sample .preview-heading { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #1a2744; line-height: 1.2; }
+    .font-sample .preview-body { font-family: 'Inter', sans-serif; font-size: 13px; color: #4a5568; line-height: 1.6; }
+    .spacer-demo { display: flex; gap: 8px; align-items: flex-end; margin-top: 4px; }
+    .spacer-block { background: #ebf4ff; border: 1px solid #bee3f8; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 4px; font-size: 9px; color: #3182ce; font-weight: 700; border-radius: 4px; }
+
+    /* === BRIEF PAGE === */
+    .brief-page { padding: 30px; }
+    .brief-title { font-size: 10px; font-weight: 700; color: #718096; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
+    .brief-section { background: white; border-radius: 8px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .brief-section h3 { font-size: 13px; font-weight: 700; color: #1a2744; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .brief-section h3 .icon { width: 28px; height: 28px; background: #1a2744; color: #c8a760; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .brief-field { margin-bottom: 10px; }
+    .brief-field label { display: block; font-size: 9px; font-weight: 700; color: #a0aec0; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+    .brief-field .field-box {
+      width: 100%;
+      border: 1.5px dashed #e2e8f0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: #c5c9d1;
+      font-style: italic;
+      background: #fafafa;
+    }
+    .brief-highlight { background: linear-gradient(135deg, #fff8e7 0%, #fffdf5 100%); border-left: 3px solid #c8a760; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 10px; }
+    .brief-highlight p { font-size: 11px; color: #744210; line-height: 1.6; }
+
+    /* === MOBILE PAGE === */
+    .mobile-frames { display: flex; gap: 30px; justify-content: center; padding: 30px; }
+    .mobile-frame-wrapper { text-align: center; }
+    .mobile-label { font-size: 9px; font-weight: 700; color: #a0aec0; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; }
+    .mobile-device {
+      width: 200px;
+      background: #1a1a2e;
+      border-radius: 36px;
+      padding: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+      border: 6px solid #2d3748;
+    }
+    .mobile-screen {
+      background: white;
+      border-radius: 26px;
+      overflow: hidden;
+      height: 400px;
+    }
+    .mobile-nav-bar {
+      background: #1a2744;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+    }
+    .mobile-nav-bar .m-logo { color: white; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; }
+    .mobile-nav-bar .m-hamburger { display: flex; flex-direction: column; gap: 3px; }
+    .mobile-nav-bar .m-hamburger span { display: block; width: 14px; height: 1.5px; background: white; border-radius: 2px; }
+    .mobile-hero {
+      background: linear-gradient(180deg, #1a2744aa 0%, #0f162999 100%), url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400') center/cover;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px;
+    }
+    .mobile-hero .badge { background: #c8a760; color: white; font-size: 7px; font-weight: 700; padding: 3px 8px; display: inline-block; margin-bottom: 8px; letter-spacing: 0.1em; }
+    .mobile-hero h2 { color: white; font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+    .mobile-cta-row { display: flex; gap: 6px; }
+    .mobile-cta { background: #c8a760; color: white; font-size: 7px; font-weight: 700; letter-spacing: 0.1em; padding: 7px 10px; border-radius: 4px; text-align: center; flex: 1; }
+    .mobile-cta.outline { background: transparent; border: 1px solid white; }
+    .mobile-sections { padding: 12px; }
+    .mobile-section-block { border-radius: 8px; background: #f8f9fa; height: 50px; margin-bottom: 8px; display: flex; align-items: center; padding: 0 12px; }
+    .mobile-section-block span { font-size: 9px; font-weight: 600; color: #4a5568; }
+
+    /* Mobile Menu */
+    .mobile-menu-screen { height: 400px; background: white; padding: 16px; }
+    .mobile-menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; }
+    .mobile-menu-header .m-logo2 { font-size: 11px; font-weight: 700; color: #1a2744; letter-spacing: 0.1em; }
+    .mobile-menu-header .m-close { font-size: 16px; color: #1a2744; }
+    .mobile-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+    .mobile-menu-item span { font-size: 11px; font-weight: 700; color: #1a2744; letter-spacing: 0.05em; text-transform: uppercase; }
+    .mobile-menu-item .arrow { color: #c8a760; font-size: 12px; }
+    .mobile-menu-cta { background: #1a2744; color: white; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; padding: 14px; border-radius: 10px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== COVER PAGE ===================== -->
+  <div class="cover-page">
+    <div class="cover-content">
+      <div class="cover-badge">Design Handoff Document</div>
+      <div class="cover-logo">Méli<br><span>Empire</span></div>
+      <div class="cover-subtitle">Spa à Domicile • Site Web Premium</div>
+      <div class="cover-divider"></div>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Version</div>
+          <div class="cover-meta-value">v1.0.0</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Date</div>
+          <div class="cover-meta-value">Avril 2026</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Statut</div>
+          <div class="cover-meta-value">Prêt Dev.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cover-footer">DOCUMENT CONFIDENTIEL — MÉLI EMPIRE SPA © 2026</div>
+  </div>
+
+  <!-- ===================== FIGMA CANVAS ===================== -->
+  <div class="figma-canvas">
+
+    <!-- === PAGE 1: HERO DESKTOP === -->
+    <div class="figma-page">
+      <div class="section-header">
+        <h2>Frame 01 — Hero Section (Desktop · 1440px)</h2>
+        <div class="section-badge">Prioritaire</div>
+      </div>
+      <div class="screen-frame">
+        <img class="screen-image" src="C:/Users/patri/.gemini/antigravity/brain/a2a0c273-731d-480e-a23a-61a6634abe73/mockup_hero_desktop_1776180483016.png" alt="Hero Desktop Mockup" />
+      </div>
+      <div class="annotations-grid">
+        <div class="annotation">
+          <div class="annotation-number">1</div>
+          <h4>Navigation Sticky</h4>
+          <p>Barre de navigation fixe avec backdrop-blur. Logo Méli Empire + liens scroll spy + boutons "Se connecter" et "Réserver".</p>
+        </div>
+        <div class="annotation">
+          <div class="annotation-number">2</div>
+          <h4>Carousel Cinématique</h4>
+          <p>3 slides auto (8s). Transition: Soft Slide. Chaque slide a son propre badge, titre et description. Les CTAs restent fixes.</p>
+        </div>
+        <div class="annotation">
+          <div class="annotation-number">3</div>
+          <h4>Glass Card (Droite)</h4>
+          <p>Carte Glassmorphism flottante. Affiche 3 arguments clés: Disponibilité, Matériel inclus, Déplacement à domicile.</p>
+        </div>
+        <div class="annotation">
+          <div class="annotation-number">4</div>
+          <h4>Overlay & Fond</h4>
+          <p>Overlay dégradé primary/60% sur l'image pour garantir la lisibilité du texte blanc en toutes conditions d'éclairage.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- === PAGE 2: À PROPOS + BENTO === -->
+    <div class="figma-page">
+      <div class="section-header">
+        <h2>Frame 02 — À Propos & Concept Bento Grid (Desktop)</h2>
+        <div class="section-badge">Conversion</div>
+      </div>
+      <div class="screen-frame">
+        <img class="screen-image" src="C:/Users/patri/.gemini/antigravity/brain/a2a0c273-731d-480e-a23a-61a6634abe73/mockup_about_bento_1776180595254.png" alt="À Propos + Bento Mockup" />
+      </div>
+      <div class="annotations-grid">
+        <div class="annotation">
+          <div class="annotation-number">1</div>
+          <h4>Section "L'Héritage"</h4>
+          <p>Layout 2 colonnes. Texte riche à gauche avec preuve sociale "+500 clients". Photo avec badge flottant animé (lévitation) à droite.</p>
+        </div>
+        <div class="annotation">
+          <div class="annotation-number">2</div>
+          <h4>Badge Flottant "Qualité Palace"</h4>
+          <p>Composant flottant animé (framer-motion, animation y: 0→-10→0 en boucle). Renforcement de la confiance et de la valeur perçue.</p>
+        </div>
+        <div class="annotation">
+          <div class="annotation-number">3</div>
+          <h4>Bento Grid (4 tuiles)</h4>
+          <p>Grille CSS asymétrique. Tuile 1 (2 col): Image + overlay dark. Tuile 2: Solide Primary. Tuile 3: Image vibe. Tuile 4 (2 col): Texte clair.</p>
+        </div>
+        <div class="annotation">
+          <div class="annotation-number">4</div>
+          <h4>Hover Effects</h4>
+          <p>Les images zooment au survol (scale 1.05). Les cartes s'élèvent (-translate-y-2). L'icône horloge pivote légèrement (rotate-12).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- === PAGE 3: MOBILE SCREENS === -->
+    <div class="figma-page">
+      <div class="section-header">
+        <h2>Frame 03 — Mobile Screens (375px · iPhone 15 Pro)</h2>
+        <div class="section-badge">Mobile First</div>
+      </div>
+      <div class="mobile-frames">
+        <!-- Mobile Hero -->
+        <div class="mobile-frame-wrapper">
+          <div class="mobile-label">01 — Écran Accueil</div>
+          <div class="mobile-device">
+            <div class="mobile-screen">
+              <div class="mobile-nav-bar">
+                <span class="m-logo">MÉLI EMPIRE</span>
+                <div class="m-hamburger">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="mobile-hero">
+                <div class="badge">VOTRE SPA PRIVÉ</div>
+                <h2>L'excellence du Spa, sans bouger de chez vous.</h2>
+                <div class="mobile-cta-row">
+                  <div class="mobile-cta">Prendre RDV</div>
+                  <div class="mobile-cta outline">Nos Soins</div>
+                </div>
+              </div>
+              <div class="mobile-sections">
+                <div class="mobile-section-block" style="background:#f0f4ff;"><span>📍 Section: L'Héritage</span></div>
+                <div class="mobile-section-block" style="background:#fff8e7;"><span>💆 Section: Nos Rituels (Cards)</span></div>
+                <div class="mobile-section-block" style="background:#f0fff4;"><span>✨ Section: Concept (Bento 1 col)</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-frame-wrapper">
+          <div class="mobile-label">02 — Menu Mobile (Ouvert)</div>
+          <div class="mobile-device">
+            <div class="mobile-screen">
+              <div class="mobile-menu-screen">
+                <div class="mobile-menu-header">
+                  <span class="m-logo2">MÉLI EMPIRE</span>
+                  <span class="m-close">✕</span>
+                </div>
+                <div class="mobile-menu-item"><span>Accueil</span><span class="arrow">›</span></div>
+                <div class="mobile-menu-item"><span>À Propos</span><span class="arrow">›</span></div>
+                <div class="mobile-menu-item"><span>Services</span><span class="arrow">›</span></div>
+                <div class="mobile-menu-item"><span>Concept</span><span class="arrow">›</span></div>
+                <div class="mobile-menu-item"><span>Contact</span><span class="arrow">›</span></div>
+                <div class="mobile-menu-cta">Se connecter</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div class="mobile-frame-wrapper">
+          <div class="mobile-label">03 — Modal Connexion</div>
+          <div class="mobile-device">
+            <div class="mobile-screen">
+              <div style="background:#1a274480;height:100%;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)">
+                <div style="background:white;border-radius:20px;overflow:hidden;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+                  <div style="background:#1a2744;padding:20px;text-align:center">
+                    <p style="color:white;font-size:14px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase">Espace Membre</p>
+                    <p style="color:rgba(255,255,255,0.5);font-size:9px;letter-spacing:0.15em;margin-top:4px">MÉLI EMPIRE SPA</p>
+                  </div>
+                  <div style="padding:20px;display:flex;flex-direction:column;gap:10px">
+                    <div>
+                      <div style="font-size:8px;color:#a0aec0;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">Email</div>
+                      <div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:10px;color:#c5c9d1;font-style:italic">votre@email.com</div>
+                    </div>
+                    <div>
+                      <div style="font-size:8px;color:#a0aec0;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">Mot de passe</div>
+                      <div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:10px;color:#c5c9d1;font-style:italic">••••••••</div>
+                    </div>
+                    <div style="background:#1a2744;color:white;font-size:10px;font-weight:700;letter-spacing:0.1em;text-align:center;padding:10px;border-radius:8px;margin-top:4px">Se connecter</div>
+                    <div style="border:1.5px solid #e2e8f0;color:#1a2744;font-size:10px;font-weight:700;letter-spacing:0.1em;text-align:center;padding:10px;border-radius:8px">Créer un compte</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annotations-grid" style="margin: 0 30px 30px;">
+        <div class="annotation">
+          <div class="annotation-number">1</div>
+          <h4>Mobile Nav (Hamburger)</h4>
+          <p>Menu Hamburger avec animation spring. Le menu se déploie depuis le haut avec backdrop-blur et occupe toute la largeur.</p>
+        </div>
+        <div class="annotation">
+          <div class="annotation-number">2</div>
+          <h4>Bento Grid → 1 Colonne</h4>
+          <p>La grille 3 colonnes du desktop se transforme en 1 colonne sur mobile. Chaque tuile garde une hauteur de 300px.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- === PAGE 4: DESIGN TOKENS === -->
+    <div class="figma-page">
+      <div class="section-header">
+        <h2>Design Tokens — Couleurs, Typographie &amp; Espacement</h2>
+        <div class="section-badge">Style Guide</div>
+      </div>
+      <div class="tokens-page">
+        <div class="tokens-grid">
+          <!-- Couleurs -->
+          <div class="token-group">
+            <h3>🎨 Palette de Couleurs</h3>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#1a2744;"></div>
+              <div class="swatch-info">
+                <h5>Primary (Navy)</h5>
+                <p>#1a2744 — Fond Nav, Titres, CTAs</p>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#c8a760;"></div>
+              <div class="swatch-info">
+                <h5>Secondary (Gold)</h5>
+                <p>#c8a760 — Accents, Badges, Icônes</p>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#f8f7f4;"></div>
+              <div class="swatch-info">
+                <h5>Background (Crème)</h5>
+                <p>#f8f7f4 — Fond page principale</p>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#ffffff; border: 1px solid #e2e8f0;"></div>
+              <div class="swatch-info">
+                <h5>Surface (Blanc)</h5>
+                <p>#FFFFFF — Cards, Modals</p>
+              </div>
+            </div>
+            <div class="color-swatch">
+              <div class="swatch" style="background:#25d366;"></div>
+              <div class="swatch-info">
+                <h5>WhatsApp (Vert)</h5>
+                <p>#25D366 — Boutons Réserver</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Typographie -->
+          <div class="token-group">
+            <h3>✏️ Typographie</h3>
+            <div class="font-sample">
+              <div class="label">Heading Font — Playfair Display</div>
+              <div class="preview-heading">L'Essence de Méli Empire</div>
+            </div>
+            <div class="font-sample">
+              <div class="label">Body Font — Inter (Regular 400)</div>
+              <div class="preview-body">Service de massage à domicile disponible 7 jours sur 7, avec du matériel professionnel.</div>
+            </div>
+            <div style="border-top: 1px solid #f0f0f0; padding-top: 12px; margin-top: 8px;">
+              <div class="label">Échelle Typographique</div>
+              <div style="font-size: 24px; font-weight: 800; color: #1a2744; line-height:1.1; margin-bottom: 4px;">H1 — 72px / Extrabold</div>
+              <div style="font-size: 18px; font-weight: 700; color: #1a2744; margin-bottom: 4px;">H2 — 48px / Bold</div>
+              <div style="font-size: 14px; font-weight: 700; color: #1a2744; margin-bottom: 4px;">H3 — 24px / Bold</div>
+              <div style="font-size: 11px; color: #4a5568;">Body — 16px / Regular</div>
+            </div>
+          </div>
+
+          <!-- Espacement -->
+          <div class="token-group">
+            <h3>📐 Espacement & Radius</h3>
+            <div class="label" style="font-size:9px; color:#a0aec0; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom: 10px;">Padding Sections</div>
+            <div class="spacer-demo">
+              <div class="spacer-block" style="width:30px; height:60px;">py-16</div>
+              <div class="spacer-block" style="width:30px; height:80px;">py-20</div>
+              <div class="spacer-block" style="width:30px; height:100px;">py-24</div>
+              <div class="spacer-block" style="width:30px; height:128px;">py-32</div>
+            </div>
+            <div style="margin-top: 16px;">
+              <div class="label" style="font-size:9px; color:#a0aec0; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom: 10px;">Border Radius</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div style="background:#f0f4ff; border: 1px solid #bee3f8; padding: 8px 12px; font-size:9px; color:#3182ce; font-weight:700; border-radius:4px;">md — 8px</div>
+                <div style="background:#f0f4ff; border: 1px solid #bee3f8; padding: 8px 12px; font-size:9px; color:#3182ce; font-weight:700; border-radius:12px;">xl — 12px</div>
+                <div style="background:#f0f4ff; border: 1px solid #bee3f8; padding: 8px 12px; font-size:9px; color:#3182ce; font-weight:700; border-radius:20px;">2xl — 20px</div>
+                <div style="background:#f0f4ff; border: 1px solid #bee3f8; padding: 8px 12px; font-size:9px; color:#3182ce; font-weight:700; border-radius:24px;">3xl — 24px</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composants clés -->
+          <div class="token-group">
+            <h3>⚡ Composants Clés</h3>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="background:#1a2744; color:white; font-size:11px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding: 12px 20px; border-radius:8px; text-align:center;">Bouton Primaire</div>
+              <div style="border: 2px solid #1a2744; color:#1a2744; font-size:11px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding: 12px 20px; border-radius:8px; text-align:center;">Bouton Outline</div>
+              <div style="background:rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:white; font-size:11px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding: 12px 20px; border-radius:8px; text-align:center; background-color:#2d3a5a">Bouton Glass</div>
+              <div style="background:#1a2744; color:#c8a760; font-size:9px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; padding: 6px 14px; display:inline-block; text-align:center;">Badge Sharp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === PAGE 5: BRIEF DE PERSONNALISATION === -->
+    <div class="figma-page">
+      <div class="section-header">
+        <h2>Brief de Personnalisation — Informations à Fournir</h2>
+        <div class="section-badge">Action Requise</div>
+      </div>
+      <div class="brief-page">
+        <div class="brief-highlight">
+          <p>⚠️ Ce document liste toutes les informations nécessaires pour personnaliser le site Méli Empire avec vos données réelles. Remplissez chaque champ et transmettez-le au développeur.</p>
+        </div>
+
+        <div class="brief-section">
+          <h3><div class="icon">📞</div> Identité & Contact</h3>
+          <div class="brief-field">
+            <label>Numéro WhatsApp (avec indicatif pays)</label>
+            <div class="field-box">ex: +229 01 41 58 57 80</div>
+          </div>
+          <div class="brief-field">
+            <label>Zone(s) de déplacement</label>
+            <div class="field-box">ex: Cotonou, Grand-Popo, hôtels 4/5 étoiles Bénin</div>
+          </div>
+          <div class="brief-field">
+            <label>Lien Instagram / Facebook / TikTok</label>
+            <div class="field-box">ex: @meliempire.spa</div>
+          </div>
+        </div>
+
+        <div class="brief-section">
+          <h3><div class="icon">💆</div> Services & Tarifs</h3>
+          <div class="brief-field">
+            <label>Soin 1 — Nom officiel</label>
+            <div class="field-box">ex: Le Relaxant Impérial</div>
+          </div>
+          <div class="brief-field">
+            <label>Soin 1 — Durée(s) & Prix</label>
+            <div class="field-box">ex: 60 min = 25 000 FCFA / 90 min = 35 000 FCFA</div>
+          </div>
+          <div class="brief-field">
+            <label>Soin 2 — Nom officiel</label>
+            <div class="field-box">ex: L'Éveil des Sens (Aromathérapie)</div>
+          </div>
+          <div class="brief-field">
+            <label>Soin 2 — Durée(s) & Prix</label>
+            <div class="field-box">ex: 60 min = 28 000 FCFA</div>
+          </div>
+          <div class="brief-field">
+            <label>Soin 3 — Nom officiel & Prix</label>
+            <div class="field-box">ex: Récupération Profonde (Sports) — 90 min = 32 000 FCFA</div>
+          </div>
+        </div>
+
+        <div class="brief-section">
+          <h3><div class="icon">🌟</div> Témoignages Clients</h3>
+          <div class="brief-field">
+            <label>Client 1 — Prénom + Initiale Nom + Avis (2 lignes max)</label>
+            <div class="field-box">ex: Sophie L. — "Service exceptionnel, je recommande à 100%!"</div>
+          </div>
+          <div class="brief-field">
+            <label>Client 2 — Prénom + Initiale Nom + Avis</label>
+            <div class="field-box">ex: Marc T. — "La qualité d'un grand spa sans quitter ma maison."</div>
+          </div>
+          <div class="brief-field">
+            <label>Client 3 — Prénom + Initiale Nom + Avis</label>
+            <div class="field-box">ex: Aminata D. — "Praticienne douce et très professionnelle."</div>
+          </div>
+        </div>
+
+        <div class="brief-section">
+          <h3><div class="icon">📸</div> Visuels à Fournir</h3>
+          <div class="brief-field">
+            <label>Logo officiel (SVG ou PNG 512x512px minimum)</label>
+            <div class="field-box">Chemin ou lien de téléchargement...</div>
+          </div>
+          <div class="brief-field">
+            <label>Photos Hero Carousel (3 photos min. — format paysage 16:9)</label>
+            <div class="field-box">Photo 1: Massage en cours / Photo 2: Soin visage / Photo 3: Ambiance bougies</div>
+          </div>
+          <div class="brief-field">
+            <label>Photo "À Propos" (portrait ou action — format 4:3)</label>
+            <div class="field-box">Photo de vous ou de votre équipe en pleine prestation</div>
+          </div>
+        </div>
+
+        <div class="brief-section">
+          <h3><div class="icon">✍️</div> Histoire de la Marque (À Propos)</h3>
+          <div class="brief-field">
+            <label>Votre prénom / Prénom de la fondatrice</label>
+            <div class="field-box">ex: Méli</div>
+          </div>
+          <div class="brief-field">
+            <label>Votre histoire en 2-3 phrases (Pourquoi Méli Empire ?)</label>
+            <div class="field-box" style="min-height: 60px;">ex: Après X années dans les instituts de luxe parisiens, j'ai voulu...</div>
+          </div>
+          <div class="brief-field">
+            <label>Certification(s) / Diplôme(s) à mentionner</label>
+            <div class="field-box">ex: Diplômée IFAPME en esthétique spécialisée — Certifiée massage suédois</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end figma-canvas -->
+
+</body>
+</html>
