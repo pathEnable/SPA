@@ -31,7 +31,7 @@ export default function MobileNav({ onLoginClick }: MobileNavProps) {
             className="fixed top-20 left-0 w-full bg-background/95 backdrop-blur-md border-b border-primary/10 shadow-xl p-6 flex flex-col gap-2 z-50 overflow-y-auto max-h-[calc(100vh-5rem)]"
           >
             <a 
-              href="#" 
+              href="#home" 
               onClick={() => setIsOpen(false)} 
               className="text-lg font-heading font-bold uppercase tracking-widest text-center py-4 rounded-xl hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:outline-none transition-colors"
             >

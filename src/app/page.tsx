@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/MobileNav";
 import LoginModal from "@/components/LoginModal";
@@ -8,7 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageCircle, Phone, MapPin, Clock, Star, ShieldCheck, Quote, ChevronDown, ExternalLink } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MessageCircle, Phone, MapPin, Clock, Star, ShieldCheck, Quote, ChevronDown, ExternalLink, Leaf, Droplets, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
@@ -16,31 +18,65 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const whatsappUrl = "https://wa.me/2290141585780?text=Bonjour%20Méli%20Empire,%20je%20souhaite%20réserver%20un%20soin."; 
+  const [isScrolled, setIsScrolled] = useState(false);
+  const whatsappUrl = "https://wa.me/2250575957587?text=Bonjour%20Méli%20Empire,%20je%20souhaite%20réserver%20un%20soin."; 
+
+  const [bookingFormData, setBookingFormData] = useState({
+    name: "",
+    phone: "",
+    service: "",
+    date: "",
+    time: "",
+    message: ""
+  });
+
+  const handleBookingSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    let text = `Bonjour Méli Empire ! Je souhaite prendre rendez-vous.\n\n`;
+    if (bookingFormData.name) text += `*Nom :* ${bookingFormData.name}\n`;
+    if (bookingFormData.phone) text += `*Téléphone :* ${bookingFormData.phone}\n`;
+    if (bookingFormData.service) text += `*Soin :* ${bookingFormData.service}\n`;
+    if (bookingFormData.date) text += `*Date :* ${bookingFormData.date}\n`;
+    if (bookingFormData.time) text += `*Heure :* ${bookingFormData.time}\n`;
+    if (bookingFormData.message) text += `\n*Précisions :* ${bookingFormData.message}`;
+
+    const encodedText = encodeURIComponent(text);
+    const waUrl = `https://wa.me/2250575957587?text=${encodedText}`;
+    window.open(waUrl, '_blank');
+  }; 
 
   const slides = [
     {
       image: "/hero-1.png",
-      badge: "Votre Spa Privé à Domicile",
+      badge: "Spa à Domicile • Abidjan",
       title: "L'excellence du Spa,",
-      subtitle: "sans bouger de chez vous.",
-      description: "Oubliez les déplacements et le stress de la ville. Méli Empire déplace l'ambiance, le matériel et le savoir-faire d'un institut prestigieux directement dans votre salon."
+      subtitle: "partout à Abidjan.",
+      description: "Méli Empire déplace l'ambiance et le savoir-faire d'un institut prestigieux directement chez vous, de Marcory à Cocody en passant par Bassam."
     },
     {
       image: "/hero-2.png",
-      badge: "Beauté & Éclat",
+      badge: "Beauté & Éclat • Côte d'Ivoire",
       title: "Révélez votre éclat",
-      subtitle: "avec nos soins sur-mesure.",
-      description: "Des rituels du visage adaptés à vos besoins. Produits sublimes et mains expertes pour une peau lumineuse, purifiée et profondément repulpée."
+      subtitle: "sans sortir de chez vous.",
+      description: "Profitez de nos soins professionnels (Massage, Pédicure, Manucure) dans le confort et l'intimité de votre foyer à Abidjan."
     },
     {
       image: "/hero-3.png",
-      badge: "Sérénité Absolue",
-      title: "Une parenthèse de sérénité",
-      subtitle: "directement à votre porte.",
-      description: "Pierres chaudes, huiles essentielles et bougies parfumées : nous recréons une atmosphère envoûtante pour vous permettre de lâcher prise totalement."
+      badge: "Bien-être Absolu • 7j/7",
+      title: "Votre cocon privé,",
+      subtitle: "où que vous soyez.",
+      description: "Nous intervenons dans toutes les communes d'Abidjan et Bassam pour vous offrir une parenthèse de sérénité totale."
     }
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -72,10 +108,32 @@ export default function Home() {
 
     return () => observer.disconnect();
   }, []);
+    const services = [
+      { title: "Massage Relaxant", price: "20.000 FCFA", duration: "60 min", desc: "Un massage doux pour détendre tout le corps et évacuer le stress de la journée.", image: "/massage-relaxant.png" },
+      { title: "Massage Tonifiant", price: "30.000 FCFA", duration: "1h", desc: "Un massage plus appuyé pour redonner de l'énergie et détendre les muscles en profondeur.", image: "/massage-tonifiant.png" },
+      { title: "Massage Spécial Méli Empire", price: "40.000 FCFA", duration: "1h 30m", desc: "Notre meilleur massage, qui mélange des mouvements relaxants et tonifiants pour un résultat complet.", image: "/massage-special.png" },
+      { title: "Massage pour Personnes Âgées", price: "25.000 FCFA", duration: "1h", desc: "Un massage très doux et adapté aux besoins des seniors pour soulager les douleurs.", image: "/massage-senior.png" },
+      { title: "Pédicure", price: "10.000 FCFA", duration: "1h 30m", desc: "Un soin complet pour nettoyer, soigner et embellir vos pieds.", image: "/pedicure.png" },
+      { title: "Manucure", price: "5.000 FCFA", duration: "30 min", desc: "Un soin pour nettoyer vos mains et prendre soin de vos ongles.", image: "/manucure.png" },
+      { title: "Sauna", price: "15.000 FCFA", duration: "45 min", desc: "Une séance de chaleur pour nettoyer la peau et se détendre.", image: "/hero-3.png" },
+      { title: "Épilation", price: "À partir de 7.000 FCFA", duration: "-", desc: "Pour enlever les poils et avoir une peau bien lisse.", image: "/hero-2.png" },
+      { title: "Piercing", price: "À partir de 5.000 FCFA", duration: "15m et +", desc: "Pose de piercing propre et soignée, avec un respect total de l'hygiène.", image: "/hero-1.png" },
+    ];
+
     return (
       <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
+      {/* Top Announcement Bar */}
+      <div className="bg-primary text-primary-foreground py-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-center border-b border-white/10 relative z-[60]">
+        <div className="container mx-auto px-4 flex items-center justify-center gap-2 sm:gap-4">
+          <MapPin className="w-3 h-3" />
+          <span>Intervention partout à Abidjan & Bassam (Marcory, Cocody, Yopougon...)</span>
+          <span className="hidden sm:inline opacity-50">|</span>
+          <span className="hidden sm:inline">Disponible 7j/7</span>
+        </div>
+      </div>
+      
       {/* Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md transition-all duration-300">
+      <header className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${isScrolled ? 'bg-background/95 backdrop-blur-md shadow-md' : 'bg-background/80 backdrop-blur-md'}`}>
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer hover:scale-105 transition-transform duration-300">
             <div className="relative w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shrink-0">
@@ -91,7 +149,7 @@ export default function Home() {
             <span className="font-heading font-bold text-base sm:text-xl tracking-tight text-primary uppercase group-hover:text-primary/80 transition-colors">Méli Empire</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium uppercase tracking-widest">
-            <a href="#" className="relative group py-1 px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 rounded-md transition-all">
+            <a href="#home" className="relative group py-1 px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 rounded-md transition-all">
               <span className={`transition-colors ${activeSection === "" || activeSection === "home" ? "text-primary font-bold" : "group-hover:text-primary"}`}>Accueil</span>
               <span className={`absolute bottom-0 left-2 right-2 h-0.5 bg-primary transition-all duration-300 ${activeSection === "" || activeSection === "home" ? "w-[calc(100%-1rem)]" : "w-0 group-hover:w-[calc(100%-1rem)]"}`}></span>
             </a>
@@ -130,7 +188,7 @@ export default function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <section id="home" className="relative min-h-[90vh] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <AnimatePresence initial={false}>
               <motion.div
@@ -274,7 +332,7 @@ export default function Home() {
                     Plus qu&apos;un simple service de soin, <span className="font-bold text-primary italic">Méli Empire</span> est né d&apos;une vision audacieuse : transcender les murs des instituts traditionnels pour apporter le luxe absolu là où vous êtes le plus serein — <span className="underline decoration-primary/30 underline-offset-8">chez vous</span>.
                   </p>
                   <p>
-                    Chaque rituel est une symphonie sensorielle orchestrée avec une précision d&apos;orfèvre. Nous ne déplaçons pas seulement du matériel ; nous transportons une âme, une atmosphère et un savoir-faire d&apos;excellence qui font de chaque séance un moment hors du temps.
+                    Chaque rituel est une symphonie d'expertise orchestrée avec une précision d'orfèvre. Nous ne déplaçons pas seulement du matériel ; nous transportons une âme, une atmosphère et un savoir-faire d'excellence qui font de chaque séance un moment hors du temps.
                   </p>
                 </div>
 
@@ -327,9 +385,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Services Section */}
-        <section id="services" className="py-16 md:py-24 bg-background">
-          <div className="container mx-auto px-4">
+        <section id="services" className="py-20 md:py-32 relative overflow-hidden bg-background">
+          {/* Background decoration */}
+          <div className="absolute top-0 left-0 w-1/4 h-full bg-secondary/5 skew-x-12 -translate-x-1/2 pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          
+          <div className="container mx-auto px-4 relative z-10">
             <motion.div 
                initial={{ opacity: 0, y: 30 }}
                whileInView={{ opacity: 1, y: 0 }}
@@ -338,73 +399,100 @@ export default function Home() {
                className="text-center space-y-4 mb-12 sm:mb-16"
             >
               <h2 className="text-xs sm:text-sm font-bold tracking-[0.3em] uppercase text-primary">Nos Rituels de Soin</h2>
-              <p className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground">Une Expérience Sensorielle</p>
+              <p className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground">Soins Professionnels d'Excellence</p>
               <div className="w-16 sm:w-24 h-1 bg-primary mx-auto" />
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="rounded-xl border-0 ring-1 ring-border/20 shadow-xl shadow-primary/5 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group overflow-hidden">
-                <CardHeader className="p-0">
-                  <div className="relative h-64 overflow-hidden">
-                    <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/0 transition-colors duration-500" />
-                    <div className="flex items-center justify-center h-full bg-secondary/30">
-                       <Star className="w-12 h-12 text-primary opacity-20 group-hover:opacity-100 transition-opacity" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {services.map((service, i) => (
+                <Card key={i} className="rounded-xl border-0 ring-1 ring-border/20 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden bg-card">
+                  <div className="relative h-48 overflow-hidden">
+                    <Image 
+                      src={service.image} 
+                      alt={service.title} 
+                      fill 
+                      className="object-cover transition-transform duration-500 group-hover:scale-110" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
+                  </div>
+                  <CardContent className="p-6 space-y-4">
+                    <CardTitle className="text-lg font-bold uppercase tracking-wide min-h-[3.5rem] flex items-center">{service.title}</CardTitle>
+                    <CardDescription className="text-sm leading-relaxed text-foreground/80">
+                      {service.desc}
+                    </CardDescription>
+                    <div className="flex justify-center items-center pt-4 border-t border-border/50">
+                      <Button 
+                        variant="link" 
+                        className="p-0 font-bold uppercase text-xs tracking-widest text-[#25D366] w-full"
+                        onClick={() => {
+                          setBookingFormData(prev => ({ ...prev, service: service.title }));
+                          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        Réserver ce soin
+                      </Button>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-8 space-y-4">
-                  <CardTitle className="text-2xl font-bold uppercase tracking-wide">Le Relaxant Impérial</CardTitle>
-                  <CardDescription className="text-base leading-relaxed text-foreground/80">
-                    Notre soin signature à domicile. Un massage suédois profond enveloppant pour libérer vos tensions nerveuses et restaurer votre énergie vitale.
-                  </CardDescription>
-                  <div className="flex justify-between items-center pt-4 border-t border-border/50">
-                    <span className="font-bold text-primary">60 / 90 min</span>
-                    <Button variant="link" className="p-0 font-bold uppercase text-xs tracking-widest text-[#25D366]"><a href={whatsappUrl}>Réserver</a></Button>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
 
-              <Card className="rounded-xl border-0 ring-1 ring-border/20 shadow-xl shadow-primary/5 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group overflow-hidden bg-secondary/10">
-                <CardHeader className="p-0">
-                   <div className="relative h-48 sm:h-64 overflow-hidden">
-                    <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/0 transition-colors duration-500" />
-                    <div className="flex items-center justify-center h-full bg-secondary/30">
-                       <Star className="w-12 h-12 text-primary opacity-20 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-8 space-y-4">
-                  <CardTitle className="text-2xl font-bold uppercase tracking-wide">L&apos;Éveil des Sens</CardTitle>
-                  <CardDescription className="text-base leading-relaxed text-foreground/80">
-                    Plongez dans votre espace embaumé. L&apos;utilisation d&apos;huiles essentielles chaudes et rares pour revitaliser le corps en douceur dans votre cocon.
-                  </CardDescription>
-                  <div className="flex justify-between items-center pt-4 border-t border-border/50">
-                    <span className="font-bold text-primary">60 min</span>
-                    <Button variant="link" className="p-0 font-bold uppercase text-xs tracking-widest text-[#25D366]"><a href={whatsappUrl}>Réserver</a></Button>
-                  </div>
-                </CardContent>
-              </Card>
+        {/* Bio Products Highlight Section */}
+        <section className="py-16 bg-secondary/10 relative overflow-hidden border-y border-primary/5">
+          {/* Background pattern */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+          <div className="absolute top-1/2 right-0 w-1/3 h-1/2 bg-primary/5 -skew-y-12 translate-x-1/4 pointer-events-none" />
+          
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-4"
+              >
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Droplets className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm uppercase tracking-widest text-foreground">Huile de Coco Bio</h4>
+                  <p className="text-xs text-muted-foreground italic">Hydratation naturelle & pure</p>
+                </div>
+              </motion.div>
 
-              <Card className="rounded-xl border-0 ring-1 ring-border/20 shadow-xl shadow-primary/5 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group overflow-hidden">
-                <CardHeader className="p-0">
-                   <div className="relative h-48 sm:h-64 overflow-hidden">
-                    <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/0 transition-colors duration-500" />
-                    <div className="flex items-center justify-center h-full bg-secondary/30">
-                       <Star className="w-12 h-12 text-primary opacity-20 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-8 space-y-4">
-                  <CardTitle className="text-2xl font-bold uppercase tracking-wide">Récupération Profonde</CardTitle>
-                  <CardDescription className="text-base leading-relaxed text-foreground/80">
-                    L&apos;idéal post-effort. Un travail musculaire appuyé pratiqué confortablement sur notre table pro pour soulager vos courbatures depuis chez vous.
-                  </CardDescription>
-                  <div className="flex justify-between items-center pt-4 border-t border-border/50">
-                    <span className="font-bold text-primary">90 min</span>
-                    <Button variant="link" className="p-0 font-bold uppercase text-xs tracking-widest text-[#25D366]"><a href={whatsappUrl}>Réserver</a></Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="flex items-center gap-4"
+              >
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm uppercase tracking-widest text-foreground">Beurre de Karité</h4>
+                  <p className="text-xs text-muted-foreground italic">Nourrit en profondeur</p>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="flex items-center gap-4"
+              >
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Leaf className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm uppercase tracking-widest text-foreground">Extraits Naturels</h4>
+                  <p className="text-xs text-muted-foreground italic">Produits sains & sans produits chimiques</p>
+                </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -427,7 +515,7 @@ export default function Home() {
             </motion.div>
 
             {/* Bento Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:grid-rows-[300px_300px_auto]">
               
               {/* Tile 1: L'Expérience Intégrale (Large, Image Background) */}
               <motion.div 
@@ -485,9 +573,9 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="md:col-span-2 bg-secondary/10 border border-secondary/20 rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 shadow-xl hover:bg-secondary/20 transition-all duration-500 group"
+                className="md:col-span-2 bg-slate-50 border border-slate-200 rounded-xl p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 shadow-sm hover:bg-slate-100 transition-all duration-300 group"
               >
-                <div className="w-16 h-16 rounded-2xl bg-white shadow-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
+                <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
                   <MapPin className="w-8 h-8 text-primary" />
                 </div>
                 <div className="text-center sm:text-left">
@@ -502,10 +590,32 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Coverage Zones Section */}
+        <section className="py-12 bg-primary/5 border-y border-primary/10">
+          <div className="container mx-auto px-4 text-center">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-primary mb-6">Nos Zones d'Intervention en Côte d'Ivoire</h3>
+            <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-4xl mx-auto">
+              {['Abidjan (Toutes communes)', 'Marcory', 'Cocody', 'Yopougon', 'Plateau', 'Treichville', 'Bingerville', 'Grand-Bassam'].map((zone, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  className="bg-white border border-primary/20 text-foreground px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-primary hover:text-white transition-colors cursor-default"
+                >
+                  {zone}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Testimonials Section */}
-        <section className="py-16 md:py-24 bg-secondary/10">
-          <div className="container mx-auto px-4">
+        <section id="testimonials" className="py-20 md:py-32 bg-background relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 w-full h-full bg-secondary/5 -skew-x-12 -translate-x-1/2 pointer-events-none" />
+          
+          <div className="container mx-auto px-4 relative z-10">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -545,8 +655,9 @@ export default function Home() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="py-20 bg-secondary/5">
-          <div className="container mx-auto px-4 max-w-3xl">
+        <section id="faq" className="py-20 bg-secondary/5 relative overflow-hidden">
+          <div className="absolute bottom-0 right-0 w-1/3 h-full bg-primary/5 skew-x-12 translate-x-1/2 pointer-events-none" />
+          <div className="container mx-auto px-4 max-w-3xl relative z-10">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -569,7 +680,7 @@ export default function Home() {
               />
               <FaqItem 
                 question="Quelles sont vos zones de déplacement ?" 
-                answer="Nous nous déplaçons actuellement dans tout Cotonou, Calavi et les zones hôtelières environnantes. Pour des zones plus éloignées, des frais de transport minimes peuvent s'appliquer."
+                answer="Nous nous déplaçons en Côte d'Ivoire, partout à Abidjan, ainsi que dans les communes de Marcory, Cocody, Yopougon, Bassam, etc."
               />
               <FaqItem 
                 question="Quels sont les moyens de paiement acceptés ?" 
@@ -596,7 +707,7 @@ export default function Home() {
                   <div className="space-y-4 text-sm font-medium">
                     <div className="flex items-center gap-3">
                       <Phone className="w-5 h-5 text-primary" />
-                      <span>+229 01 41 58 57 80</span>
+                      <span>+225 05 75 95 75 87</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <MessageCircle className="w-5 h-5 text-primary" />
@@ -604,34 +715,101 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="pt-4 sm:pt-8">
-                     <Button size="xl" className="w-full h-14 sm:h-16 rounded-lg bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-sm sm:text-lg gap-2 sm:gap-3 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all whitespace-normal leading-tight">
-                        <a href={whatsappUrl} className="flex items-center justify-center gap-2 sm:gap-3 w-full h-full">
-                          <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
-                          <span className="text-center">Chat WhatsApp Direct</span>
-                        </a>
-                     </Button>
+                  <div className="pt-4 sm:pt-8 hidden sm:block">
+                     {/* Placeholder if we want to add an image or badge here instead of the button */}
                   </div>
                 </div>
 
-                <div className="space-y-6">
+                <form onSubmit={handleBookingSubmit} className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="uppercase font-bold tracking-widest text-xs">Nom Complet</Label>
-                    <Input id="name" placeholder="Votre nom..." className="rounded-md border focus-visible:ring-primary h-14 shadow-sm bg-background" />
+                    <Label htmlFor="name" className="uppercase font-bold tracking-widest text-xs">Nom Complet *</Label>
+                    <Input 
+                      id="name" 
+                      placeholder="Votre nom..." 
+                      className="rounded-md border focus-visible:ring-primary h-14 shadow-sm bg-background"
+                      value={bookingFormData.name}
+                      onChange={(e) => setBookingFormData({...bookingFormData, name: e.target.value})}
+                      required
+                    />
                   </div>
+                  
                   <div className="space-y-2">
-                    <Label htmlFor="phone" className="uppercase font-bold tracking-widest text-xs">Téléphone</Label>
-                    <Input id="phone" placeholder="Votre numéro..." className="rounded-md border focus-visible:ring-primary h-14 shadow-sm bg-background" />
+                    <Label htmlFor="phone" className="uppercase font-bold tracking-widest text-xs">Téléphone *</Label>
+                    <Input 
+                      id="phone" 
+                      placeholder="Votre numéro..." 
+                      className="rounded-md border focus-visible:ring-primary h-14 shadow-sm bg-background"
+                      value={bookingFormData.phone}
+                      onChange={(e) => setBookingFormData({...bookingFormData, phone: e.target.value})}
+                      required
+                    />
                   </div>
+                  
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="uppercase font-bold tracking-widest text-xs">Soin souhaité / Message</Label>
-                    <Textarea id="message" placeholder="Ex: Massage Relaxant 90min ce samedi à 14h..." className="rounded-md border focus-visible:ring-primary min-h-[120px] shadow-sm bg-background" />
+                    <Label htmlFor="service" className="uppercase font-bold tracking-widest text-xs">Soin Choisi</Label>
+                    <Select value={bookingFormData.service} onValueChange={(value) => setBookingFormData({...bookingFormData, service: value ?? ""})}>
+                      <SelectTrigger className="w-full h-14 rounded-md border shadow-sm bg-background">
+                        <SelectValue placeholder="Sélectionnez un soin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {services.map((service, i) => (
+                          <SelectItem key={i} value={service.title} className="hover:bg-primary/5 focus:bg-primary/5 cursor-pointer py-3">
+                            <span className="font-medium text-foreground">{service.title}</span>
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="Autre / Sur-mesure">Autre / Sur-mesure</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <p className="text-[10px] text-muted-foreground uppercase leading-relaxed">
-                    * En cliquant sur le bouton ci-dessus, vous serez redirigé vers WhatsApp pour finaliser votre réservation. 
-                    Aucune donnée n&apos;est stockée inutilement.
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="date" className="uppercase font-bold tracking-widest text-xs">Date souhaitée</Label>
+                      <Input 
+                        id="date" 
+                        type="date"
+                        className="rounded-md border focus-visible:ring-primary h-14 shadow-sm bg-background"
+                        value={bookingFormData.date}
+                        onChange={(e) => setBookingFormData({...bookingFormData, date: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="time" className="uppercase font-bold tracking-widest text-xs">Heure</Label>
+                      <Input 
+                        id="time" 
+                        type="time" 
+                        className="rounded-md border focus-visible:ring-primary h-14 shadow-sm bg-background"
+                        value={bookingFormData.time}
+                        onChange={(e) => setBookingFormData({...bookingFormData, time: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="uppercase font-bold tracking-widest text-xs">Précisions utiles</Label>
+                    <Textarea 
+                      id="message" 
+                      placeholder="Ex: Le code porte est 1234, merci de m'appeler en arrivant..." 
+                      className="rounded-md border focus-visible:ring-primary min-h-[100px] shadow-sm bg-background"
+                      value={bookingFormData.message}
+                      onChange={(e) => setBookingFormData({...bookingFormData, message: e.target.value})}
+                    />
+                  </div>
+                  
+                  <Button type="submit" size="xl" className="w-full h-14 rounded-lg bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-sm tracking-widest uppercase gap-2 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all mt-4">
+                    <MessageCircle className="w-5 h-5 shrink-0" />
+                    Réserver sur WhatsApp
+                  </Button>
+                  
+                  <p className="text-center text-[10px] uppercase tracking-widest text-muted-foreground mt-4 animate-pulse font-bold">
+                    ⚡ Réponse ultra-rapide via WhatsApp
                   </p>
-                </div>
+
+                  <p className="text-[10px] text-muted-foreground uppercase leading-relaxed text-center">
+                    * Vous serez redirigé vers WhatsApp avec un message pré-rempli. 
+                    Aucune donnée n&apos;est stockée de notre côté.
+                  </p>
+                </form>
              </div>
           </div>
         </section>
@@ -647,17 +825,17 @@ export default function Home() {
                 <Image src="/logo.svg" alt="Footer Logo" width={50} height={50} className="brightness-200" />
                 <span className="font-heading font-bold text-xl uppercase tracking-widest text-white">Méli Empire</span>
               </div>
-              <p className="text-white/60 text-sm leading-relaxed max-w-xs italic">
+              <p className="text-white/80 text-sm leading-relaxed max-w-xs italic">
                 L'excellence du bien-être transportée directement chez vous. Une expérience de palace, l'intimité de votre foyer.
               </p>
               <div className="flex gap-4 pt-2">
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#C5A059] hover:text-white transition-all cursor-pointer">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#C5A059] hover:text-white transition-all cursor-pointer">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#C5A059] hover:text-white transition-all cursor-pointer">
                   <MessageCircle className="w-5 h-5" />
                 </div>
               </div>
@@ -665,53 +843,54 @@ export default function Home() {
 
             {/* Col 2: Navigation */}
             <div className="space-y-6">
-              <h4 className="text-primary font-bold uppercase tracking-widest text-xs">Navigation</h4>
+              <h4 className="text-[#C5A059] font-bold uppercase tracking-widest text-xs">Navigation</h4>
               <ul className="space-y-4 text-sm font-medium">
-                <li><a href="#" className="text-white/70 hover:text-primary transition-colors flex items-center gap-2">Accueil</a></li>
-                <li><a href="#story" className="text-white/70 hover:text-primary transition-colors flex items-center gap-2">À Propos</a></li>
-                <li><a href="#services" className="text-white/70 hover:text-primary transition-colors flex items-center gap-2">Nos Soins</a></li>
-                <li><a href="#faq" className="text-white/70 hover:text-primary transition-colors flex items-center gap-2">FAQ</a></li>
+                <li><a href="#" className="text-white/90 hover:text-[#C5A059] transition-colors flex items-center gap-2">Accueil</a></li>
+                <li><a href="#story" className="text-white/90 hover:text-[#C5A059] transition-colors flex items-center gap-2">À Propos</a></li>
+                <li><a href="#services" className="text-white/90 hover:text-[#C5A059] transition-colors flex items-center gap-2">Nos Soins</a></li>
+                <li><a href="#faq" className="text-white/90 hover:text-[#C5A059] transition-colors flex items-center gap-2">FAQ</a></li>
+                <li><Link href="/dossier" className="text-white/50 hover:text-[#C5A059] transition-colors flex items-center gap-2 text-[10px] mt-4 pt-4 border-t border-white/5">Dossier Projet</Link></li>
               </ul>
             </div>
 
             {/* Col 3: Services */}
             <div className="space-y-6">
-              <h4 className="text-primary font-bold uppercase tracking-widest text-xs">Nos Rituels</h4>
+              <h4 className="text-[#C5A059] font-bold uppercase tracking-widest text-xs">Nos Rituels</h4>
               <ul className="space-y-4 text-sm font-medium">
-                <li className="text-white/70">Le Relaxant Impérial</li>
-                <li className="text-white/70">L&apos;Éveil des Sens</li>
-                <li className="text-white/70">Récupération Profonde</li>
-                <li className="text-white/70">Soins Signature Visage</li>
+                <li className="text-white/80">Massages Relaxant & Tonifiant</li>
+                <li className="text-white/80">Soins Spécial Méli Empire</li>
+                <li className="text-white/80">Pédicure & Manucure</li>
+                <li className="text-white/80">Sauna, Épilation & Piercing</li>
               </ul>
             </div>
 
             {/* Col 4: Contact */}
             <div className="space-y-6">
-              <h4 className="text-primary font-bold uppercase tracking-widest text-xs">Nous contacter</h4>
+              <h4 className="text-[#C5A059] font-bold uppercase tracking-widest text-xs">Nous contacter</h4>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <Phone className="w-5 h-5 text-primary shrink-0" />
+                  <Phone className="w-5 h-5 text-[#C5A059] shrink-0" />
                   <div className="text-sm">
                     <p className="text-white font-bold">Téléphone / WhatsApp</p>
-                    <p className="text-white/60">+229 01 41 58 57 80</p>
+                    <p className="text-white/90">+225 05 75 95 75 87</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <MapPin className="w-5 h-5 text-primary shrink-0" />
+                  <MapPin className="w-5 h-5 text-[#C5A059] shrink-0" />
                   <div className="text-sm">
                     <p className="text-white font-bold">Zones couvertes</p>
-                    <p className="text-white/60">Cotonou & Calavi (Bénin)</p>
+                    <p className="text-white/90">Côte d'Ivoire (Abidjan, Marcory, Cocody...)</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4 text-primary">
+                <div className="flex items-start gap-4 text-[#C5A059]">
                   <ExternalLink className="w-5 h-5 shrink-0" />
-                  <span className="text-sm font-bold border-b border-primary/30 py-0.5">Réserver sur WhatsApp</span>
+                  <span className="text-sm font-bold border-b border-[#C5A059]/30 py-0.5">Réserver sur WhatsApp</span>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-white/30 uppercase tracking-[0.2em]">
+          <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60 uppercase tracking-[0.2em]">
             <p>© {new Date().getFullYear()} Méli Empire SPA. Design & Code by Luxury Creative.</p>
             <div className="flex gap-8">
               <a href="#" className="hover:text-white transition-colors">Mentions Légales</a>
@@ -726,6 +905,24 @@ export default function Home() {
         isOpen={isLoginOpen} 
         onClose={() => setIsLoginOpen(false)} 
       />
+
+      {/* Floating WhatsApp Button */}
+      <motion.a
+        href={`https://wa.me/2250575957587?text=${encodeURIComponent("Bonjour Méli Empire ! Je souhaite avoir des informations sur vos soins.")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl cursor-pointer hover:bg-[#128C7E] transition-colors"
+      >
+        <MessageCircle className="w-8 h-8" />
+        <span className="absolute -top-1 -right-1 flex h-4 w-4">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-4 w-4 bg-secondary"></span>
+        </span>
+      </motion.a>
     </div>
   );
 }

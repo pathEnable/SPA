@@ -128,3 +128,72 @@
     @apply font-sans;
   }
 }
+
+/* ========================================
+   PRINT STYLES — Export PDF propre
+   ======================================== */
+@media print {
+  /* Reset global */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Masquer navigation et éléments interactifs */
+  .print\:hidden,
+  header.sticky,
+  button,
+  nav {
+    display: none !important;
+  }
+
+  /* Afficher les éléments print-only */
+  .print\:block {
+    display: block !important;
+  }
+
+  /* Supprimer ombres et arrondis excessifs */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Optimiser les sauts de page */
+  section,
+  .print\:break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Marges de page */
+  @page {
+    margin: 1.5cm 2cm;
+    size: A4;
+  }
+
+  /* Liens : afficher l'URL */
+  a[href]:after {
+    content: none !important;
+  }
+
+  /* Forcer le fond blanc sur les cartes */
+  .bg-white,
+  .bg-\[#faf9f7\] {
+    background: white !important;
+  }
+
+  /* Forcer la couleur du texte primary pour visibilité */
+  .text-primary {
+    color: #1a1a3e !important;
+  }
+
+  /* Réduire les marges du conteneur */
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}
