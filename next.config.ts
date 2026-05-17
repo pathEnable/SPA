@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
     // build-time type-check. We validate types locally with `tsc --noEmit`.
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     remotePatterns: [
       {
