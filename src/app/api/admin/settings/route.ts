@@ -6,10 +6,10 @@ export async function GET() {
   try {
     const settings = await prisma.siteSetting.findMany();
     // Transform array to key-value object for easier frontend consumption
-    const settingsMap = settings.reduce((acc, curr) => {
+    const settingsMap = settings.reduce<Record<string, string>>((acc, curr) => {
       acc[curr.key] = curr.value;
       return acc;
-    }, {} as Record<string, string>);
+    }, {});
     
     return NextResponse.json(settingsMap);
   } catch (error) {
