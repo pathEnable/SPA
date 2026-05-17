@@ -6,9 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface MobileNavProps {
   onLoginClick: () => void;
+  onLookupClick: () => void;
 }
 
-export default function MobileNav({ onLoginClick }: MobileNavProps) {
+export default function MobileNav({ onLoginClick, onLookupClick }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -59,6 +60,13 @@ export default function MobileNav({ onLoginClick }: MobileNavProps) {
               Concept
             </a>
             <a 
+              href="#comments" 
+              onClick={() => setIsOpen(false)} 
+              className="text-lg font-heading font-bold uppercase tracking-widest text-center py-4 rounded-xl hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:outline-none transition-colors"
+            >
+              Livre d'Or
+            </a>
+            <a 
               href="#contact" 
               onClick={() => setIsOpen(false)} 
               className="text-lg font-heading font-bold uppercase tracking-widest text-center py-4 rounded-xl hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:outline-none transition-colors"
@@ -66,13 +74,22 @@ export default function MobileNav({ onLoginClick }: MobileNavProps) {
               Contact
             </a>
             
-            <div className="pt-4 mt-2 border-t border-primary/10">
+            <div className="pt-4 mt-2 border-t border-primary/10 flex flex-col gap-3">
+              <button 
+                onClick={() => {
+                  setIsOpen(false);
+                  onLookupClick();
+                }}
+                className="w-full py-4 rounded-xl border border-[#a87f53]/25 bg-background text-[#a87f53] font-bold uppercase tracking-widest active:scale-95 transition-all text-sm cursor-pointer"
+              >
+                Suivre mon soin
+              </button>
               <button 
                 onClick={() => {
                   setIsOpen(false);
                   onLoginClick();
                 }}
-                className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all"
+                className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all text-sm cursor-pointer"
               >
                 Se connecter
               </button>
